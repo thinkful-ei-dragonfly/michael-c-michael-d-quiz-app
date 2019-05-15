@@ -1,18 +1,16 @@
-// import TriviaApi from './TriviaApi';
+import TriviaApi from './TriviaApi';
 
 class Question {
-  constructor() {
-    this.category = '';
-    this.correct_answer = '';
-    this.difficulty = '';
-    this.incorrect_answers = [];
-    this.question = '';
-    this.type = '';
+  constructor(questionData) {
+    this.text = questionData['question'];
+    this.answers = questionData['incorrect_answers'];
+    this.answers.push(questionData['correct_answer']);
+    this.correctAnswer = questionData['correct_answer'];
+    this.userAnswer = null;
   }
-
+  
 }
 
 
-
-
 export default Question;
+

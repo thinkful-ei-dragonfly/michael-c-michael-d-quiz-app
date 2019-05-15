@@ -1,3 +1,6 @@
+
+
+import Question from './Question';
 import TriviaApi from './TriviaApi';
 
 class Quiz {
@@ -9,30 +12,23 @@ class Quiz {
     this.active = false;
     this.api = new TriviaApi(5);
   }
-  startQuiz() {
-      this.api.getQuestions()
-        .then(res => console.log(res))
+  prepareQuiz() {
+    this.api.getQuestions()
+      .then((res) => {
+        let holder = [];
+        console.log(this);
+        res['results'].forEach(function(elem) {
+          holder.push(elem);
+        });
+        console.log(holder);
+        this.unasked = holder;
+        // let question1 = new Question(res.results[0]);
+        // console.log(question1);
+      });
   }
 }
 
-/* const setUnasked {
-
-}
-
-const setAsked {
-
-}
-
-const scoreFunction {
-    // keeps track of Quiz.score:
-    // updates Quiz.store:
-}
-
-const scoreHistoryFunction {
-
-}
-
-const setActive {
-    //
-} */
 export default Quiz;
+
+//next question method in quiz moves question from unasked to asked
+//submit answer method takes current question and change the userAnswer property to what they submit

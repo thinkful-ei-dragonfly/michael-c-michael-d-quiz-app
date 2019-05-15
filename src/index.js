@@ -1,7 +1,8 @@
+import Question from './Question';
 import Quiz from './Quiz';
 
 const quiz = new Quiz();
-quiz.startQuiz();
+quiz.prepareQuiz();
 
 console.log(quiz);
 

@@ -15,16 +15,11 @@ class Quiz {
   prepareQuiz() {
     this.api.getQuestions()
       .then((res) => {
-        let holder = [];
-        console.log(this);
-        res['results'].forEach(function(elem) {
-          holder.push(elem);
+        res['results'].forEach(elem => {
+          this.unasked.push(elem);
         });
-        console.log(holder);
-        this.unasked = holder;
-        // let question1 = new Question(res.results[0]);
-        // console.log(question1);
       });
+      console.log(this.unasked.length);
   }
 }
 

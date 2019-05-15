@@ -1,11 +1,11 @@
 {
   "name": "ei-fundamentals-quiz",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simply run `npm install` after cloning the repo and `npm start` to kickoff the dev server",
   "main": "index.js",
   "mode": "development",
   "dependencies": {
-    "jquery": "^3.4.0"
+    "jquery": "^3.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",

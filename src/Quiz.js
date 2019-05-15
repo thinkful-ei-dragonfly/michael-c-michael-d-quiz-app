@@ -1,24 +1,39 @@
+import TriviaApi from './TriviaApi';
 import Question from './Question';
+import Model from './lib/Model';
 
-class Quiz {
+class Quiz extends Model {
 
-  static DEFAULT_QUIZ_LENGTH = 2;
 
   constructor() {
-    // Array of Question instances
+    super();
     this.unasked = [];
-    // Array of Question instances
     this.asked = [];
+    this.score = 0;
+    this.scoreHistory = [];
     this.active = false;
-
-    // TASK: Add more props here per the exercise
-
+    this.api = new TriviaApi();
   }
 
-  // Example method:
-  startGame() {
+
+  startQuiz() {
     this.active = true;
+    this.api.getQuestions()
+      .then(res => {
+        console.log(res);
+        return res;
+      })
+      .then(res => {
+        res.results.forEach(question => {
+          this.unasked.push(new Question(question));
+        });
+      });
+
   }
 }
+
+// submitAnswer(choice) {
+//   //sumbit choice
+// }
 
 export default Quiz;

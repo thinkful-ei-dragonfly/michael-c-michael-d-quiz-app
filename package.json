@@ -5,6 +5,7 @@
   "main": "index.js",
   "mode": "development",
   "dependencies": {
+    "babel": "^6.23.0",
     "jquery": "^3.4.1"
   },
   "devDependencies": {
@@ -16,8 +17,8 @@
     "file-loader": "^3.0.1",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^0.23.1",
-    "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.1",
+    "webpack": "^4.31.0",
+    "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.3.1"
   },
   "scripts": {

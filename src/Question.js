@@ -11,7 +11,7 @@ class Question extends Model{
 
   //Methods
   submitAnswer(answer) {
-    this.submittedAnswer = answer;
+    this.userAnswer = answer;
   }
 }
 

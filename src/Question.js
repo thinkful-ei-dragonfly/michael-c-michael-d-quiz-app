@@ -10,8 +10,16 @@ class Question extends Model{
   }
 
   //Methods
-  submitAnswer(answer) {
-    this.userAnswer = answer;
+  answerStatus() {
+    if (this.userAnswer === null) {
+      return -1;
+    }
+    else if (this.userAnswer !== this.unasked[0].correctAnswer) {
+      return 0;
+    }
+    else if (this.userAnswer === this.unasked[0].correctAnswer) {
+      return 1;
+    }
   }
 }
 

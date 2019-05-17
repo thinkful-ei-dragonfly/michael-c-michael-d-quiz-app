@@ -1,9 +1,9 @@
 class TriviaApi {
 
-  constructor() {
+  constructor(n) {
     this.getQuestions = function() {
 
-      const BASE_URL = 'https://opentdb.com/api.php?amount=5&type=multiple';
+      const BASE_URL = `https://opentdb.com/api.php?amount=${n}&type=multiple`;
   
       return fetch(BASE_URL)
         .then( res => {
@@ -17,6 +17,5 @@ class TriviaApi {
   }
 }
   
-
 
 export default TriviaApi;

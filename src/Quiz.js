@@ -10,8 +10,9 @@ import Model from './lib/Model';
   */
 
 class Quiz extends Model {
-  
-   static DEFAULT_QUIZ_LENGTH = 5;
+
+  static DEFAULT_QUIZ_LENGTH = 5;
+
   constructor() {
     super();
     this.unasked = [];
@@ -19,8 +20,9 @@ class Quiz extends Model {
     this.score = 0;
     this.scoreHistory = [];
     this.active = false;
-    this.api = new TriviaApi();
+    this.api = new TriviaApi(Quiz.DEFAULT_QUIZ_LENGTH);
   }
+
   startQuiz() {
     this.active = true;
     this.api.getQuestions()
@@ -35,27 +37,38 @@ class Quiz extends Model {
       });
   }
 
-  nextQuestion() {
-    if(this.unasked.length > 0) {
-    const quest = this.unasked[0]
-    this.asked.push(quest)
-    this.unasked = this.unasked.slice(1) 
+  submitAnswer(answer) {
+    if (this.unasked[0].correctAnswer === answer) {
+      this.userAnswer = answer;
+      this.score++;
+    } else {
+      this.userAnswer = answer;
     }
   }
 
-//NEXT PUT LOGIC FOR WHAT HAPPENS WHEN ANSWER IS NOT CORRECT
-//line 59
-
-
-  submitAnswer(answer) {
-    if (this.unasked[0].correctAnswer == answer) {
-      this.userAnswer = answer;
-      this.score++;
-    } 
-//    else
+  answerStatus() {
+    if (this.userAnswer === null) {
+      return -1;
+    }
+    else if (this.userAnswer !== this.unasked[0].correctAnswer) {
+      return 0;
+    }
+    else if (this.userAnswer === this.unasked[0].correctAnswer) {
+      return 1;
+    }
   }
+
+  nextQuestion() {
+    if (this.unasked.length > 0) {
+      this.userAnswer = null;
+      const quest = this.unasked[0];
+      this.asked.push(quest);
+      this.unasked = this.unasked.slice(1);
+    } else {
+      throw new Error('No More Questions remaining');
+    }
+  }
+
 }
-
-
 
 export default Quiz;

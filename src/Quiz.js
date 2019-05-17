@@ -21,6 +21,7 @@ class Quiz extends Model {
     this.scoreHistory = [];
     this.active = false;
     this.api = new TriviaApi(Quiz.DEFAULT_QUIZ_LENGTH);
+    this.update();
   }
 
   startQuiz() {
@@ -35,6 +36,7 @@ class Quiz extends Model {
           this.unasked.push(new Question(question));
         });
       });
+    this.update();
   }
 
   submitAnswer(answer) {
@@ -44,18 +46,7 @@ class Quiz extends Model {
     } else {
       this.userAnswer = answer;
     }
-  }
-
-  answerStatus() {
-    if (this.userAnswer === null) {
-      return -1;
-    }
-    else if (this.userAnswer !== this.unasked[0].correctAnswer) {
-      return 0;
-    }
-    else if (this.userAnswer === this.unasked[0].correctAnswer) {
-      return 1;
-    }
+    this.update();
   }
 
   nextQuestion() {
@@ -67,8 +58,8 @@ class Quiz extends Model {
     } else {
       throw new Error('No More Questions remaining');
     }
+    this.update();
   }
-
 }
 
 export default Quiz;

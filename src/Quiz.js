@@ -2,13 +2,6 @@ import TriviaApi from './TriviaApi';
 import Question from './Question';
 import Model from './lib/Model';
 
-/* Flow
-  q.startQuiz()
-  q.unasked[0] is the first unasked question in array
-  q.submitAnswer('<answer>') submit answer to unasked[0]
-  q.nextQuestion() unasked[0] ==> asked[0] | unasked.length = 4
-  */
-
 class Quiz extends Model {
 
   static DEFAULT_QUIZ_LENGTH = 5;
@@ -24,41 +17,65 @@ class Quiz extends Model {
     this.update();
   }
 
-  startQuiz() {
-    this.active = true;
-    this.api.getQuestions()
+  _getInitQuest() {
+    return this.api.getQuestions()
       .then(res => {
-        console.log(res);
-        return res;
-      })
-      .then(res => {
+        console.log(res.results);
         res.results.forEach(question => {
           this.unasked.push(new Question(question));
         });
       });
-    this.update();
+  }
+
+  _getCurrentQuestion() {
+    return this.asked[0];
+  }
+
+  startQuiz() {
+    this.unasked = [];
+    this.asked = [];
+    this.score = 0;
+    this.active = true;
+    this._getInitQuest()
+      .then(() => {
+        this.nextQuestion();
+      })
+      .catch (error => console.log(error.message));
   }
 
   submitAnswer(answer) {
-    if (this.unasked[0].correctAnswer === answer) {
-      this.userAnswer = answer;
+    const currentAnswer =  this._getCurrentQuestion();
+    let answerStatus = currentAnswer.answerStatus();
+
+    if (answerStatus !== -1) {
+      throw new Error('Cannot answer question more than once');
+    }
+    currentAnswer.handleAnswer(answer);
+    answerStatus = currentAnswer.answerStatus();
+    if (answerStatus === 1) {
       this.score++;
-    } else {
-      this.userAnswer = answer;
     }
     this.update();
+
+    return answerStatus === 1;
+
   }
 
   nextQuestion() {
-    if (this.unasked.length > 0) {
-      this.userAnswer = null;
-      const quest = this.unasked[0];
-      this.asked.push(quest);
-      this.unasked = this.unasked.slice(1);
-    } else {
-      throw new Error('No More Questions remaining');
+    const currentQuestion = this._getCurrentQuestion();
+    if (currentQuestion && currentQuestion.userAnswer === undefined) {
+      throw new Error('You must answer the question before you continue');
+
     }
+    if (this.unasked.length === 0) {
+      this.active = false;
+      this.scoreHistory.unshift(this.score);
+      this.update();
+      return null;
+    }
+    this.asked.unshift(this.unasked.pop());
     this.update();
+    return this.asked[0];
   }
 }
 

@@ -1,4 +1,5 @@
 import Model from './lib/Model';
+import { decodeHTML } from './lib/util';
 
 class Question extends Model{
   constructor(question) {
@@ -14,12 +15,16 @@ class Question extends Model{
     if (this.userAnswer === null) {
       return -1;
     }
-    else if (this.userAnswer !== this.unasked[0].correctAnswer) {
-      return 0;
-    }
-    else if (this.userAnswer === this.unasked[0].correctAnswer) {
+    else if (this.userAnswer === this.correctAnswer) {
       return 1;
     }
+    else {
+      return 0;
+    }
+  }
+
+  handleAnswer(answer) {
+    this.userAnswer = decodeHTML(answer);
   }
 }
 

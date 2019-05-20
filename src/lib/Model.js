@@ -15,9 +15,6 @@ class Model {
 
     views.forEach(view => view.render());
   }
-  startNewGame() {
-    this.startQuiz();
-  }
 }
 
 export default Model;

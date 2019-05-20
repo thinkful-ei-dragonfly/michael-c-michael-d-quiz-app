@@ -1,7 +1,10 @@
 import $ from 'jquery';
 import Renderer from './lib/Renderer';
 
+
 class QuizDisplay extends Renderer {
+
+
   getEvents() {
     return {
       'click .start-quiz': 'handleStart',
@@ -24,6 +27,8 @@ class QuizDisplay extends Renderer {
     `;
   }
 
+  
+
   template() {
     let html = '';
     
@@ -36,8 +41,7 @@ class QuizDisplay extends Renderer {
   }
 
   handleStart() {
-    this.model.startNewGame();
-
+    this.model.startQuiz();
   }
 }
 

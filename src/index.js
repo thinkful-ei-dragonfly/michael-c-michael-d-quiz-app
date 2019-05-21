@@ -14,5 +14,3 @@ function main() {
 }
 
 $(main);
-
-

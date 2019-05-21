@@ -8,7 +8,7 @@ class QuizDisplay extends Renderer {
   getEvents() {
     return {
       'click .start-quiz': 'handleStart',
-      // 'click .submit'
+      'submit .asnwer-form': 'handleSubmit',
     };
   }
 
@@ -31,16 +31,17 @@ class QuizDisplay extends Renderer {
   _generateQuestionDisplay() {
     const currentQuestion = this.model._getCurrentQuestion();
     const currentAnswers = currentQuestion.answers.map(ans => {
-      return `<input type="radio"> ${ans}`;
+      return `<input type="radio" name="answer"> ${ans}`;
     }).join('');
     
-    return `<h3> Answer the following question </h3>
+    return `
+    <form class="answer-form"> <h3> Answer the following question </h3>
     <p>${currentQuestion.text}</p> 
     ${currentAnswers} <br>
-    <input type="submit" class="submit">`;
+    <input type="submit" class="submit">
+    </form>`;
   }
 
-  _gerneate
 
   template() {
     let html = '';
@@ -57,6 +58,12 @@ class QuizDisplay extends Renderer {
 
   handleStart() {
     this.model.startQuiz();
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    event.target.answer.value;
+
   }
 }
 

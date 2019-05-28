@@ -1,81 +1,82 @@
-import TriviaApi from './TriviaApi';
 import Question from './Question';
 import Model from './lib/Model';
+import TriviaApi from './TriviaApi';
 
 class Quiz extends Model {
-
   static DEFAULT_QUIZ_LENGTH = 5;
 
   constructor() {
     super();
+    // Array of Question instances
     this.unasked = [];
-    this.asked = [];
+    // Array of Question instances
+    this.askedQuestions = [];
     this.score = 0;
     this.scoreHistory = [];
     this.active = false;
-    this.api = new TriviaApi(Quiz.DEFAULT_QUIZ_LENGTH);
-    this.update();
+    this.isLastCorrect = false;
+
+    // TASK: Add more props here per the exercise
   }
 
-  _getInitQuest() {
-    return this.api.getQuestions()
-      .then(res => {
-        console.log(res.results);
-        res.results.forEach(question => {
-          this.unasked.push(new Question(question));
-        });
-      });
-  }
-
-  _getCurrentQuestion() {
-    return this.asked[0];
-  }
-
-  startQuiz() {
-    this.unasked = [];
-    this.asked = [];
-    this.score = 0;
-    this.active = true;
-    this._getInitQuest()
-      .then(() => {
-        this.nextQuestion();
-      })
-      .catch (error => console.log(error.message));
-  }
-
-  submitAnswer(answer) {
-    const currentAnswer =  this._getCurrentQuestion();
-    let answerStatus = currentAnswer.answerStatus();
-
-    if (answerStatus !== -1) {
-      throw new Error('Cannot answer question more than once');
-    }
-    currentAnswer.handleAnswer(answer);
-    answerStatus = currentAnswer.answerStatus();
-    if (answerStatus === 1) {
-      this.score++;
-    }
-    this.update();
-
-    return answerStatus === 1;
-
-  }
-
-  nextQuestion() {
-    const currentQuestion = this._getCurrentQuestion();
-    if (currentQuestion && currentQuestion.userAnswer === undefined) {
-      throw new Error('You must answer the question before you continue');
-
-    }
-    if (this.unasked.length === 0) {
-      this.active = false;
-      this.scoreHistory.unshift(this.score);
+  askQuestion() {
+    if (this.unasked.length) {
+      this.askedQuestions.push(this.unasked.pop());
       this.update();
-      return null;
+    } else {
+      this.active = false;
+      this.scoreHistory.push(this.score);
+      this.update();
     }
-    this.asked.unshift(this.unasked.pop());
+  }
+
+  // Example method:
+  startGame() {
+    this.score = 0;
+    this.unasked = [];
+    this.askedQuestions = [];
+    this.active = true;
+    let game = new TriviaApi();
+    console.log('Start quiz');
+    game
+      .apiFetch()
+      .then(res => {
+        this.unasked = [];
+        for (let i = res.length - 1; i >= 0; i--) {
+          let newQuestion = new Question(res[i]);
+          let answers = newQuestion.randomizeAnswers();
+          newQuestion.answers = answers;
+          this.unasked.push(newQuestion);
+          // console.log(answers);
+          // console.log(newQuestion.correctAnswer);
+          // console.log(newQuestion.checkUserAnswer(answers[1]));
+          // console.log(`Score: ${this.score}`);
+        }
+        this.askQuestion();
+        this.update();
+      })
+      .catch(err => console.log(err.message));
+  }
+
+  handleUserAnswer(answer) {
+    if (
+      this.askedQuestions[this.askedQuestions.length - 1].checkUserAnswer(
+        answer
+      )
+    ) {
+      this.updateScore();
+      this.isLastCorrect = true;
+    }
     this.update();
-    return this.asked[0];
+  }
+
+  updateScore() {
+    this.score = this.score + 1;
+  }
+
+  endGame() {
+    this.active = false;
+    this.scoreHistory.push(this.score);
   }
 }
 

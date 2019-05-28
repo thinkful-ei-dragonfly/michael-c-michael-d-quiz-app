@@ -2,15 +2,13 @@ import $ from 'jquery';
 import Quiz from './Quiz';
 import QuizDisplay from './QuizDisplay';
 import QuizStatus from './QuizStatus';
+import './main.css';
 
 function main() {
-  
-  const quiz = new Quiz();
-  const quizDisplay = new QuizDisplay(quiz, '.display');
-  const quizStatus = new QuizStatus(quiz, '.status');
-  window.quiz = quiz;  // adding `quiz` to `window`, so you can examine it in console
-  window.quizDisplay = quizDisplay;
-  window.quizStatus = quizStatus;
+  const q = new Quiz();
+  window.q = q;  // adding `q` to `window`, so you can examine it in console
+  const quizDisplay = new QuizDisplay(q, '.display');
+  const quizStatus = new QuizStatus(q, '.status');
 }
 
 $(main);

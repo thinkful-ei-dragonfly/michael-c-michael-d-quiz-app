@@ -1,31 +1,30 @@
-import Model from './lib/Model';
-import { decodeHTML } from './lib/util';
+class Question {
 
-class Question extends Model{
   constructor(question) {
-    super();
-    this.answers = [question.correct_answer, ...question.incorrect_answers] ;
+
     this.text = question.question;
+
+    this.answers = question.incorrect_answers;
     this.correctAnswer = question.correct_answer;
     this.userAnswer = null;
   }
 
-  //Methods
-  answerStatus() {
-    if (this.userAnswer === null) {
-      return -1;
+  randomizeAnswers() {
+    let answers = this.answers;
+    if (this.answers.length === 3) {
+      let index = Math.floor(Math.random() * (answers.length + 1));
+      answers.splice(index, 0, this.correctAnswer);
+    } else {
+      answers = ['True', 'False'];
     }
-    else if (this.userAnswer === this.correctAnswer) {
-      return 1;
-    }
-    else {
-      return 0;
-    }
+    return answers;
   }
 
-  handleAnswer(answer) {
-    this.userAnswer = decodeHTML(answer);
+  checkUserAnswer(answer) {
+    this.userAnswer = answer;
+    return this.userAnswer === this.correctAnswer;
   }
+
 }
 
 export default Question;
